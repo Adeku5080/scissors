@@ -1,0 +1,21 @@
+{
+    "name": "scissors",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+   
+  "scripts":{
+    "start":"node ./build/index.js",
+    "build" : "tsc -p .",
+    "dev" : "nodemon ./src/index.ts"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.1.4",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+
+}
