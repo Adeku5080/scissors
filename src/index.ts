@@ -4,12 +4,14 @@
 import * as dotenv from 'dotenv'
 import path from "path";
 import bodyParser, { urlencoded } from "body-parser";
+import  morgan from 'morgan'
+import urlRouter from "./routes/url";
 
  const app = express()  
 
 dotenv.config()
 
-
+app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({extended:false}))
 app.set('views',path.join(__dirname,'views'))
 app.set('view engine','ejs')
@@ -18,6 +20,7 @@ app.set('view engine','ejs')
 app.use(auth0Middleware)
 
 app.get('/',(req,res)=>{
+    console.log(req.oidc.user , "ali")
     res.render('index',{
         user:req.oidc.user
     })
@@ -34,16 +37,8 @@ app.get('/callback',(req,res)=>{
     console.log(req.oidc.user)
 })
 
-app.post("/logout",(req,res)=>{
-    // req.oidcLogout();
-    res.redirect('/')
+app.use("/api/v1/url",urlRouter)
 
-})
-
-// app.use((err,req,res,next)=>{
-//     console.log(err);
-//     res.status(500).send('something broke')
-// })
  app.listen(5000,(): void=>{
      console.log("server running")
   })

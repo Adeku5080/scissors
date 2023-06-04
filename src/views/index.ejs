@@ -5,8 +5,13 @@
 </header>
 
 <body>
-    <p>welcome</p>
-    <p>you are logged in as <%= user.username %></p>
+    <% if (user) { %>
+        <p>welcome</p>
+
+    <p>you are logged in as <%= user?.email %></p>
+    <%} else { %>
+        <p>you are not logged in</p>
+     <% } %>   
 
 </body>
 

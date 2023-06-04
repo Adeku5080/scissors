@@ -32,13 +32,17 @@ const auth0_1 = __importDefault(require("./auth/auth0"));
 const dotenv = __importStar(require("dotenv"));
 const path_1 = __importDefault(require("path"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const morgan_1 = __importDefault(require("morgan"));
+const url_1 = __importDefault(require("./routes/url"));
 const app = (0, express_1.default)();
 dotenv.config();
+app.use((0, morgan_1.default)('dev'));
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.set('views', path_1.default.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(auth0_1.default);
 app.get('/', (req, res) => {
+    console.log(req.oidc.user, "ali");
     res.render('index', {
         user: req.oidc.user
     });
@@ -52,14 +56,7 @@ app.get('/profile', (0, express_openid_connect_1.requiresAuth)(), (req, res) => 
 app.get('/callback', (req, res) => {
     console.log(req.oidc.user);
 });
-app.post("/logout", (req, res) => {
-    // req.oidcLogout();
-    res.redirect('/');
-});
-// app.use((err,req,res,next)=>{
-//     console.log(err);
-//     res.status(500).send('something broke')
-// })
+app.use("/api/v1/url", url_1.default);
 app.listen(5000, () => {
     console.log("server running");
 });
