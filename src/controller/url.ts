@@ -4,13 +4,14 @@ import { Request,Response } from "express"
 
 
 
-const createUrl = (req:Request,res:Response)=>{
+const createUrl =async(req:Request,res:Response)=>{
     const {longUrl} = req.body
-    const hashedurl = createHash('md5').update(longUrl).digest('hex')
-    console.log(hashedurl);
+    const hashedUrl = createHash('md5').update(longUrl).digest('hex')
+    const shortenedUrl = hashedUrl.slice(0,5 )
 
-
-    // const url = UrlModel.create(req.body)
+    const url = await UrlModel.create({longUrl : longUrl,shortUrl:shortenedUrl})
+    console.log(url,"adeku")
+    res.status(201).json({url})
 
 }
 

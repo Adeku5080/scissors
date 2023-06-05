@@ -31,13 +31,14 @@ const express_openid_connect_1 = require("express-openid-connect");
 const auth0_1 = __importDefault(require("./auth/auth0"));
 const dotenv = __importStar(require("dotenv"));
 const path_1 = __importDefault(require("path"));
-const body_parser_1 = __importDefault(require("body-parser"));
-const morgan_1 = __importDefault(require("morgan"));
+const connect_1 = __importDefault(require("./database/connect"));
+// import bodyParser, { urlencoded } from "body-parser";
 const url_1 = __importDefault(require("./routes/url"));
 const app = (0, express_1.default)();
 dotenv.config();
-app.use((0, morgan_1.default)('dev'));
-app.use(body_parser_1.default.urlencoded({ extended: false }));
+(0, connect_1.default)(process.env.MONGO_URI);
+// app.use(bodyParser.urlencoded({extended:false}))
+app.use(express_1.default.json());
 app.set('views', path_1.default.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(auth0_1.default);

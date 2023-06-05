@@ -3,16 +3,16 @@
  import  auth0Middleware from "./auth/auth0"
 import * as dotenv from 'dotenv'
 import path from "path";
-import bodyParser, { urlencoded } from "body-parser";
-import  morgan from 'morgan'
+ import connect from "./database/connect"
+// import bodyParser, { urlencoded } from "body-parser";
 import urlRouter from "./routes/url";
-
  const app = express()  
 
 dotenv.config()
+connect(process.env.MONGO_URI)
+// app.use(bodyParser.urlencoded({extended:false}))
+app.use(express.json());
 
-app.use(morgan('dev'))
-app.use(bodyParser.urlencoded({extended:false}))
 app.set('views',path.join(__dirname,'views'))
 app.set('view engine','ejs')
 
@@ -38,6 +38,8 @@ app.get('/callback',(req,res)=>{
 })
 
 app.use("/api/v1/url",urlRouter)
+
+
 
  app.listen(5000,(): void=>{
      console.log("server running")
