@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.redirectUrl = exports.createUrl = void 0;
 const Url_1 = __importDefault(require("../models/Url"));
 const crypto_1 = require("crypto");
 const createUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -19,7 +20,25 @@ const createUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const hashedUrl = (0, crypto_1.createHash)('md5').update(longUrl).digest('hex');
     const shortenedUrl = hashedUrl.slice(0, 5);
     const url = yield Url_1.default.create({ longUrl: longUrl, shortUrl: shortenedUrl });
-    console.log(url, "adeku");
-    res.status(201).json({ url });
+    console.log(url, 'adeku');
+    res.status(201).json({
+        newUrl: `scissors.com/${shortenedUrl}`
+    });
 });
-exports.default = createUrl;
+exports.createUrl = createUrl;
+//get the url
+//split it ,then take out the part after the slash,
+//find in your db whether that part exists,if it does redirect the browser to it
+//if it does not,return invalid short Url
+const redirectUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const url = req.url;
+    console.log(url, "ali");
+    const id = url.split('/')[1];
+    const data = yield Url_1.default.findOne({ shortUrl: id });
+    console.log(data === null || data === void 0 ? void 0 : data.longUrl, "long");
+    if (!data) {
+        return res.status(404).json({ msg: 'page not found' });
+    }
+    res.redirect(302, '/data.longUrl');
+});
+exports.redirectUrl = redirectUrl;

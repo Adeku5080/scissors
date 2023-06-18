@@ -1,9 +1,11 @@
 import  express  from "express";
-import createUrl from "../controller/url";
+import { requiresAuth } from 'express-openid-connect';
+
+import {createUrl,redirectUrl} from "../controller/url";
 
 const urlRouter = express.Router()
 
-
-urlRouter.route('/').post(createUrl)
+urlRouter.route('/').get(redirectUrl)
+urlRouter.route('/create').post(createUrl)
 
 export default urlRouter

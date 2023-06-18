@@ -7,15 +7,15 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const UserSchema = new mongoose_1.default.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
     },
     email: {
         type: String,
-        required: true
+        required: true,
     },
     googleId: {
-        type: String
-    }
+        type: String,
+    },
 });
 const UserModel = mongoose_1.default.model('User', UserSchema);
 exports.default = UserModel;
