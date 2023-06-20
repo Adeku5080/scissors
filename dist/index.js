@@ -33,10 +33,16 @@ const dotenv = __importStar(require("dotenv"));
 const path_1 = __importDefault(require("path"));
 const connect_1 = __importDefault(require("./database/connect"));
 const url_1 = __importDefault(require("./routes/url"));
+// const cors = __importDefault(require("cors"))
 const app = (0, express_1.default)();
 dotenv.config();
 (0, connect_1.default)(process.env.MONGO_URI);
 // app.use(bodyParser.urlencoded({extended:false}))
+// app.use(cors(
+//     {
+//         origin : "*"
+//     }
+// ))
 app.use(express_1.default.json());
 app.set('views', path_1.default.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -47,6 +53,7 @@ app.get('/', (req, res) => {
         user: req.oidc.user,
     });
 });
+
 app.get('/profile', (0, express_openid_connect_1.requiresAuth)(), (req, res) => {
     console.log(req.oidc.user);
     res.render('profile', {
