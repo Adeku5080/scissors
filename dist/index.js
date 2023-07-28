@@ -27,43 +27,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const express_openid_connect_1 = require("express-openid-connect");
-const auth0_1 = __importDefault(require("./auth/auth0"));
 const dotenv = __importStar(require("dotenv"));
-const path_1 = __importDefault(require("path"));
 const connect_1 = __importDefault(require("./database/connect"));
-const url_1 = __importDefault(require("./routes/url"));
-// const cors = __importDefault(require("cors"))
-const app = (0, express_1.default)();
+const body_parser_1 = __importDefault(require("body-parser"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const cors_1 = __importDefault(require("cors"));
 dotenv.config();
+const url_1 = __importDefault(require("./routes/url"));
+const auth_1 = __importDefault(require("./routes/auth"));
+const morgan_1 = __importDefault(require("morgan"));
+//database
 (0, connect_1.default)(process.env.MONGO_URI);
-// app.use(bodyParser.urlencoded({extended:false}))
-// app.use(cors(
-//     {
-//         origin : "*"
-//     }
-// ))
+const app = (0, express_1.default)();
+app.use((0, morgan_1.default)('dev'));
 app.use(express_1.default.json());
-app.set('views', path_1.default.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.use(auth0_1.default);
-app.get('/', (req, res) => {
-    //   console.log(req.oidc.user, 'ali');
-    res.render('index', {
-        user: req.oidc.user,
-    });
-});
-
-app.get('/profile', (0, express_openid_connect_1.requiresAuth)(), (req, res) => {
-    console.log(req.oidc.user);
-    res.render('profile', {
-        user: req.oidc.user,
-    });
-});
-app.get('/callback', (req, res) => {
-    console.log(req.oidc.user);
-});
+app.use(body_parser_1.default.urlencoded({ extended: false }));
+app.use((0, cookie_parser_1.default)(process.env.JWT_SECRET));
+app.use((0, cors_1.default)({
+    origin: "*"
+}));
+//route
 app.use('/api/v1/url', url_1.default);
-app.listen(5000, () => {
+app.use("/api/v1/auth", auth_1.default);
+//server
+app.listen(8000, () => {
     console.log('server running');
 });
