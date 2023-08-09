@@ -16,13 +16,14 @@ exports.redirectUrl = exports.createUrl = void 0;
 const Url_1 = __importDefault(require("../models/Url"));
 const crypto_1 = require("crypto");
 const createUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('adeku');
     const { longUrl } = req.body;
     const hashedUrl = (0, crypto_1.createHash)('md5').update(longUrl).digest('hex');
     const shortenedUrl = hashedUrl.slice(0, 5);
     const url = yield Url_1.default.create({ longUrl: longUrl, shortUrl: shortenedUrl });
     console.log(url, 'adeku');
     res.status(201).json({
-        newUrl: `scissors.com/${shortenedUrl}`
+        newUrl: `scissors.com/${shortenedUrl}`,
     });
 });
 exports.createUrl = createUrl;
@@ -31,11 +32,9 @@ exports.createUrl = createUrl;
 //find in your db whether that part exists,if it does redirect the browser to it
 //if it does not,return invalid short Url
 const redirectUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const url = req.url;
-    console.log(url, "ali");
-    const id = url.split('/')[1];
-    const data = yield Url_1.default.findOne({ shortUrl: id });
-    console.log(data === null || data === void 0 ? void 0 : data.longUrl, "long");
+    const { shorturl } = req.params;
+    const data = yield Url_1.default.findOne({ shortUrl: shorturl });
+    console.log(data === null || data === void 0 ? void 0 : data.longUrl, 'long');
     if (!data) {
         return res.status(404).json({ msg: 'page not found' });
     }
